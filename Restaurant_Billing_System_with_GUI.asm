@@ -25,6 +25,7 @@ menuText db 0Dh,0Ah,"============== MENU ==============",0Dh,0Ah,\
            "3 - Dinner",0
 titleMenu db "FOOD MENU",0
 
+; (we will use a dynamic popup instead of this static string at the end)
 billText db 0Dh,0Ah,"============== BILL ==============",0Dh,0Ah,\
          "Your Bill Has Been Generated!",0Dh,0Ah,"===============================",0
 titleBill db "YOUR BILL",0
@@ -48,6 +49,22 @@ change dword 0
 discount_10 dword 10
 discount_5 dword 5
 multiply_100 dword 100
+
+; new variables to support detailed popup
+origSubTotal dword 0        ; preserve subtotal before discount
+discountAmount dword 0      ; computed discount amount
+Payment dword 0             ; store payment entered by user
+
+; buffer and format for building the dynamic bill popup
+billPopupFmt db "BILL SUMMARY",13,10, \
+               "-------------------------------",13,10, \
+               "Subtotal: %lu",13,10, \
+               "Discount: %lu",13,10, \
+               "Net Total: %lu",13,10, \
+               "Payment: %lu",13,10, \
+               "Change: %lu",13,10, 0
+
+billPopupBuffer db 256 DUP(0)
 
 welcomeMsg db 0Dh,0Ah, "=============================================",0Dh,0Ah,\
             "      WELCOME TO FAST FOOD RESTAURANT        ",0Dh,0Ah,\
@@ -85,7 +102,12 @@ main PROC
     call calcTotal
     call CalcDiscount
 
-    invoke MessageBoxA, 0, OFFSET billText, OFFSET titleBill, MB_OK+MB_ICONINFORMATION+MB_SYSTEMMODAL
+    ; Build the dynamic bill string into billPopupBuffer
+    ; wsprintfA(buffer, format, origSubTotal, discountAmount, NetTotal, Payment, change)
+    invoke wsprintfA, OFFSET billPopupBuffer, OFFSET billPopupFmt, origSubTotal, discountAmount, NetTotal, Payment, change
+
+    ; Show final bill popup with detailed values
+    invoke MessageBoxA, 0, OFFSET billPopupBuffer, OFFSET titleBill, MB_OK+MB_ICONINFORMATION+MB_SYSTEMMODAL
 
     exit
 main ENDP
@@ -412,6 +434,10 @@ calcTotal ENDP
 ;                CALCULATE DISCOUNT
 ; ===================================================
 CalcDiscount PROC
+    ; preserve original subtotal for computing discount amount
+    mov eax, subTotal
+    mov origSubTotal, eax
+
     mov eax, subTotal
 
     cmp eax, 1000
@@ -450,7 +476,14 @@ Discount5:
     jmp net_total
 
 net_total:
+    ; subtract discount (in eax) from subTotal
     sub subTotal, eax
+
+    ; compute discountAmount = origSubTotal - subTotal
+    mov eax, origSubTotal
+    sub eax, subTotal
+    mov discountAmount, eax
+
     call Crlf
     mWrite "Net Total :                                            "
     mov eax, subTotal
@@ -463,8 +496,11 @@ net_total:
 get_payment:
     mWrite "Enter Payment (Rs):                                    "
     call ReadInt
+    ; store payment for the popup
+    mov Payment, eax
 
 print_change:
+    ; EAX still holds payment; subtract NetTotal to get change
     sub eax, NetTotal
     mov change, eax
     mov eax, change
