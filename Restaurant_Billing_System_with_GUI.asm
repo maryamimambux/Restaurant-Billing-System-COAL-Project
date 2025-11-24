@@ -28,10 +28,7 @@ billText db "Your Bill Has Been Generated!",0
 titleBill db "Bill",0
 
 
-; ---------------- MENU ARRAYS ----------------
-BreakfastArr DWORD OFFSET Paratha, OFFSET Tea, OFFSET Omelette, OFFSET Pancake, OFFSET Coffee
-LunchArr     DWORD OFFSET Biryani, OFFSET Karahi, OFFSET Roti, OFFSET Salad, OFFSET Soup
-DinnerArr    DWORD OFFSET ChickenHandi, OFFSET Naan, OFFSET ColdDrink, OFFSET FishCurry, OFFSET IceCream
+; ---------------- MENU ARRAYS ---------------- 
 
 BreakfastCosts DWORD 50, 30, 70, 60, 40
 LunchCosts     DWORD 250, 400, 20, 100, 80
@@ -42,26 +39,6 @@ quantity DWORD 50 DUP(0)
 subTotal DWORD 0
 totalNoOfOrders DWORD 0
 selectedMenu DWORD 0
-
-
-; ---------------- ITEM NAMES ----------------
-Paratha      BYTE "(1) Paratha",0
-Tea          BYTE "(2) Tea",0
-Omelette     BYTE "(3) Omelette",0
-Pancake      BYTE "(4) Pancake",0
-Coffee       BYTE "(5) Coffee",0
-
-Biryani      BYTE "(1) Biryani",0
-Karahi       BYTE "(2) Karahi",0
-Roti         BYTE "(3) Roti",0
-Salad        BYTE "(4) Salad",0
-Soup         BYTE "(5) Soup",0
-
-ChickenHandi BYTE "(1) Chicken Handi",0
-Naan         BYTE "(2) Naan (per piece)",0
-ColdDrink    BYTE "(3) Cold Drink",0
-FishCurry    BYTE "(4) Fish Curry",0
-IceCream     BYTE "(5) Ice Cream",0
 
 
 ; ---------------- MESSAGES ----------------
