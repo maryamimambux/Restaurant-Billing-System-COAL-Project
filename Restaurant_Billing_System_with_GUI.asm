@@ -1,7 +1,6 @@
 ; ============================================================
 ;   FAST FOOD MANAGEMENT SYSTEM (GUI + Console Hybrid)
-;   GUI support using MessageBoxA
-;   All original procedures preserved exactly
+;   GUI support using MessageBoxA (Enhanced Popups)
 ; ============================================================
 
 INCLUDE Irvine32.inc
@@ -9,27 +8,28 @@ INCLUDE Macros.inc          ; Needed for mWrite
 
 includelib user32.lib
 includelib kernel32.lib
-; DO NOT declare MessageBoxA manually (Irvine already does)
-; EXTERN MessageBoxA : PROC  ; <-- removed
 
 .DATA
 
 ; ---------------- GUI TEXT ----------------
-guiWelcomeMsg db "WELCOME TO FAST FOOD RESTAURANT!", 0
-titleWelcome db "Welcome", 0
+guiWelcomeMsg db 0Dh,0Ah,"=============================",0Dh,0Ah,\
+               "      WELCOME TO FAST FOOD RESTAURANT!      ",0Dh,0Ah,\
+               "=============================",0Dh,0Ah,0
 
-menuText db "Choose a Menu Option:",13,10,\
+titleWelcome db "WELCOME!",0
+
+menuText db 0Dh,0Ah,"============== MENU ==============",0Dh,0Ah,\
+           "Choose a Menu Option:",13,10,\
            "1 - Breakfast",13,10,\
            "2 - Lunch",13,10,\
            "3 - Dinner",0
-titleMenu db "Menu", 0
+titleMenu db "FOOD MENU",0
 
-billText db "Your Bill Has Been Generated!",0
-titleBill db "Bill",0
-
+billText db 0Dh,0Ah,"============== BILL ==============",0Dh,0Ah,\
+         "Your Bill Has Been Generated!",0Dh,0Ah,"===============================",0
+titleBill db "YOUR BILL",0
 
 ; ---------------- MENU ARRAYS ---------------- 
-
 BreakfastCosts DWORD 50, 30, 70, 60, 40
 LunchCosts     DWORD 250, 400, 20, 100, 80
 DinnerCosts    DWORD 450, 30, 100, 300, 90
@@ -40,8 +40,6 @@ subTotal DWORD 0
 totalNoOfOrders DWORD 0
 selectedMenu DWORD 0
 
-
-; ---------------- MESSAGES ----------------
 enterQuantity byte "Enter Quantity: ", 0
 addMore byte "Add more(yes-1 / no-0): ", 0
 enterChoise byte "Enter your choise: ", 0
@@ -51,18 +49,14 @@ discount_10 dword 10
 discount_5 dword 5
 multiply_100 dword 100
 
-
-; ---------------- WELCOME & INFO ----------------
-welcomeMsg db 0Dh,0Ah, "=============================================",0Dh,0Ah,
-            "      WELCOME TO FAST FOOD RESTAURANT        ",0Dh,0Ah,
+welcomeMsg db 0Dh,0Ah, "=============================================",0Dh,0Ah,\
+            "      WELCOME TO FAST FOOD RESTAURANT        ",0Dh,0Ah,\
             "=============================================",0Dh,0Ah,0
 
-restaurantInfo db 0Dh,0Ah,
-                "    Contact: 0300-1234567        ",0Dh,0Ah,
-                "    Location: Karachi             ",0Dh,0Ah,
+restaurantInfo db 0Dh,0Ah,\
+                "    Contact: 0300-1234567        ",0Dh,0Ah,\
+                "    Location: Karachi             ",0Dh,0Ah,\
                 "************************************************",0Dh,0Ah,0
-
-
 
 .CODE
 
@@ -71,8 +65,8 @@ restaurantInfo db 0Dh,0Ah,
 ; ===================================================
 main PROC
 
-    ; GUI Popup Welcome
-    invoke MessageBoxA, 0, OFFSET guiWelcomeMsg, OFFSET titleWelcome, MB_OK
+    ; FIXED HERE → MB_SYSTEMMODAL instead of MB_TOPMOST
+    invoke MessageBoxA, 0, OFFSET guiWelcomeMsg, OFFSET titleWelcome, MB_OK+MB_ICONINFORMATION+MB_SYSTEMMODAL
 
     mov eax, 0Eh
     call SetTextColor
@@ -85,15 +79,13 @@ main PROC
     mov eax, 0Fh
     call SetTextColor
 
-    ; GUI popup menu
-    invoke MessageBoxA, 0, OFFSET menuText, OFFSET titleMenu, MB_OK
+    invoke MessageBoxA, 0, OFFSET menuText, OFFSET titleMenu, MB_OK+MB_ICONINFORMATION+MB_SYSTEMMODAL
 
     call DisplayMenu
     call calcTotal
     call CalcDiscount
 
-    ; GUI popup bill
-    invoke MessageBoxA, 0, OFFSET billText, OFFSET titleBill, MB_OK
+    invoke MessageBoxA, 0, OFFSET billText, OFFSET titleBill, MB_OK+MB_ICONINFORMATION+MB_SYSTEMMODAL
 
     exit
 main ENDP
@@ -299,7 +291,7 @@ nameDinner:
     je nd5
     jmp afterName
 
-nd1: mWrite " (1) Chicken Handi    "     ; dinner
+nd1: mWrite " (1) Chicken Handi    "     
      jmp afterName
 nd2: mWrite " (2) Naan (per piece) "
      jmp afterName
@@ -363,7 +355,6 @@ afterName:
     call WriteDec
     mWrite "         "
 
-    ; -------- PRICE LOOKUP --------
     mov edx, selectedMenu
     cmp edx, 1
     je priceBreakfast
@@ -415,7 +406,6 @@ printSubTotal:
     call Crlf
     ret
 calcTotal ENDP
-
 
 
 ; ===================================================
@@ -489,6 +479,5 @@ print_change:
     call Crlf
     ret
 CalcDiscount ENDP
-
 
 END main
