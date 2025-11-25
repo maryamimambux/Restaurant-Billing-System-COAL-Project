@@ -1,3 +1,4 @@
+
 ; ============================================================
 ;   FAST FOOD MANAGEMENT SYSTEM (GUI + Console Hybrid)
 ;   GUI support using MessageBoxA (Enhanced Popups)
@@ -7,30 +8,30 @@ INCLUDE Irvine32.inc
 INCLUDE Macros.inc          ; Needed for mWrite
 
 includelib user32.lib
-includelib kernel32.lib
+
 
 .DATA
 
 ; ---------------- GUI TEXT ----------------
-guiWelcomeMsg db 0Dh,0Ah,"=============================",0Dh,0Ah,\
-               "      WELCOME TO FAST FOOD RESTAURANT!      ",0Dh,0Ah,\
+guiWelcomeMsg db 0Dh,0Ah,"=============================",0Dh,0Ah,
+               "      WELCOME TO FAST FOOD RESTAURANT!      ",0Dh,0Ah,
                "=============================",0Dh,0Ah,0
 
 titleWelcome db "WELCOME!",0
 
-menuText db 0Dh,0Ah,"============== MENU ==============",0Dh,0Ah,\
-           "Choose a Menu Option:",13,10,\
-           "1 - Breakfast",13,10,\
-           "2 - Lunch",13,10,\
+menuText db 0Dh,0Ah,"============== MENU ==============",0Dh,0Ah,
+           "Choose a Menu Option:",13,10,
+           "1 - Breakfast",13,10,
+           "2 - Lunch",13,10,
            "3 - Dinner",0
 titleMenu db "FOOD MENU",0
 
 ; (we will use a dynamic popup instead of this static string at the end)
-billText db 0Dh,0Ah,"============== BILL ==============",0Dh,0Ah,\
+billText db 0Dh,0Ah,"============== BILL ==============",0Dh,0Ah,
          "Your Bill Has Been Generated!",0Dh,0Ah,"===============================",0
 titleBill db "YOUR BILL",0
 
-; ---------------- MENU ARRAYS ---------------- 
+; ---------------- MENU ARRAYS ----------------
 BreakfastCosts DWORD 50, 30, 70, 60, 40
 LunchCosts     DWORD 250, 400, 20, 100, 80
 DinnerCosts    DWORD 450, 30, 100, 300, 90
@@ -44,7 +45,7 @@ selectedMenu DWORD 0
 enterQuantity byte "Enter Quantity: ", 0
 addMore byte "Add more(yes-1 / no-0): ", 0
 enterChoise byte "Enter your choise: ", 0
-NetTotal  dword 0 
+NetTotal  dword 0
 change dword 0
 discount_10 dword 10
 discount_5 dword 5
@@ -56,23 +57,23 @@ discountAmount dword 0      ; computed discount amount
 Payment dword 0             ; store payment entered by user
 
 ; buffer and format for building the dynamic bill popup
-billPopupFmt db "BILL SUMMARY",13,10, \
-               "-------------------------------",13,10, \
-               "Subtotal: %lu",13,10, \
-               "Discount: %lu",13,10, \
-               "Net Total: %lu",13,10, \
-               "Payment: %lu",13,10, \
+billPopupFmt db "BILL SUMMARY",13,10,
+               "-------------------------------",13,10,
+               "Subtotal: %lu",13,10,
+               "Discount: %lu",13,10,
+               "Net Total: %lu",13,10,
+               "Payment: %lu",13,10,
                "Change: %lu",13,10, 0
 
 billPopupBuffer db 256 DUP(0)
 
-welcomeMsg db 0Dh,0Ah, "=============================================",0Dh,0Ah,\
-            "      WELCOME TO FAST FOOD RESTAURANT        ",0Dh,0Ah,\
+welcomeMsg db 0Dh,0Ah, "=============================================",0Dh,0Ah,
+            "      WELCOME TO FAST FOOD RESTAURANT        ",0Dh,0Ah,
             "=============================================",0Dh,0Ah,0
 
-restaurantInfo db 0Dh,0Ah,\
-                "    Contact: 0300-1234567        ",0Dh,0Ah,\
-                "    Location: Karachi             ",0Dh,0Ah,\
+restaurantInfo db 0Dh,0Ah,
+                "    Contact: 0300-1234567        ",0Dh,0Ah,
+                "    Location: Karachi             ",0Dh,0Ah,
                 "************************************************",0Dh,0Ah,0
 
 .CODE
@@ -155,7 +156,7 @@ breakfast:
     mWrite "------------------------- BREAKFAST MENU -------------------------"
     call Crlf
     mWrite "ITEM                   COST (Rs)        CODE"
-    call Crlf 
+    call Crlf
     mWrite "1) Paratha             Rs.50              1"
     call Crlf
     mWrite "2) Tea                 Rs.30              2"
@@ -175,7 +176,7 @@ lunch:
     mWrite "--------------------------- LUNCH MENU ---------------------------"
     call Crlf
     mWrite "ITEM                   COST (Rs)        CODE"
-    call Crlf 
+    call Crlf
     mWrite "1) Biryani             Rs.250             1"
     call Crlf
     mWrite "2) Karahi              Rs.400             2"
@@ -195,7 +196,7 @@ dinner:
     mWrite "--------------------------- DINNER MENU ---------------------------"
     call Crlf
     mWrite "ITEM                   COST (Rs)        CODE"
-    call Crlf 
+    call Crlf
     mWrite "1) Chicken Handi       Rs.450             1"
     call Crlf
     mWrite "2) Naan (per piece)    Rs.30              2"
@@ -313,7 +314,7 @@ nameDinner:
     je nd5
     jmp afterName
 
-nd1: mWrite " (1) Chicken Handi    "     
+nd1: mWrite " (1) Chicken Handi    "    
      jmp afterName
 nd2: mWrite " (2) Naan (per piece) "
      jmp afterName
