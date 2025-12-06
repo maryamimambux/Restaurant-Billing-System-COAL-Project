@@ -8,4 +8,5 @@ This project is a console-based Restaurant Billing System developed in MASM Asse
 
 <img width="978" height="1440" alt="image" src="https://github.com/user-attachments/assets/2725c0f4-1312-4830-af09-81b44f06e5e7" />
 
-<img width="963" height="1516" alt="image" src="https://github.com/user-attachments/assets/f63d72e4-a235-4a5d-86dd-f86ca035a514" />
+<img width="971" height="1530" alt="image" src="https://github.com/user-attachments/assets/ec11ee4a-461c-40d5-932a-5ae705a7aeef" />
+
